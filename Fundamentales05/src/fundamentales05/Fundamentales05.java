@@ -5,23 +5,38 @@
  */
 package fundamentales05;
 
-import Service.MesSecretoService;
-
+import Entities.CuentaBancaria;
+import Services.CuentaBancariaService;
+import java.util.Scanner;
 
 /**
- * 5. Crea una clase en Java donde declares una variable de tipo array de
- * Strings que contenga los doce meses del año, en minúsculas. A continuación,
- * declara una variable mesSecreto de tipo String, y hazla igual a un elemento
- * del array (por ejemplo, mesSecreto = mes[9]. El programa debe pedir al
- * usuario que adivine el mes secreto. Si el usuario acierta mostrar un mensaje,
- * y si no lo hace, pedir que vuelva a intentar adivinar el mes secreto. Un
- * ejemplo de ejecución del programa podría ser este:
- * 
- * Adivine el mes secreto. Introduzca el nombre del mes en minúsculas: febrero 
- * 
- * No ha acertado. Intente adivinarlo introduciendo otro mes: agosto 
- * 
- * ¡Ha acertado!
+ * 5. Realizar una clase llamada Cuenta (bancaria) que debe tener como mínimo
+ * los atributos: numeroCuenta (entero), el DNI del cliente (entero largo) y el
+ * saldo actual (entero). Las operaciones asociadas a dicha clase son:
+ *
+ * a) Constructor por defecto y constructor con DNI, saldo, número de cuenta e
+ * interés.
+ *
+ * b) Agregar los métodos getters y setters correspondientes
+ *
+ * c) Método para crear un objeto Cuenta, pidiéndole los datos al usuario.
+ *
+ * d) Método ingresar(double ingreso): el método recibe una cantidad de dinero a
+ * ingresar y se la sumara a saldo actual.
+ *
+ * e) Método retirar(double retiro): el método recibe una cantidad de dinero a
+ * retirar y se la restará al saldo actual. Si la cuenta no tiene la cantidad de
+ * dinero a retirar, se pondrá el saldo actual en 0.
+ *
+ * f) Método extraccionRapida(): le permitirá sacar solo un 20% de su saldo.
+ * Validar que el usuario no saque más del 20%. (supongo que el usuario debería
+ * tener que volver a ingresar para sacar otro 20%)
+ *
+ * g) Método consultarSaldo(): permitirá consultar el saldo disponible en la
+ * cuenta.
+ *
+ * h) Método consultarDatos(): permitirá mostrar todos los datos de la cuenta
+ *
  */
 public class Fundamentales05 {
 
@@ -29,9 +44,60 @@ public class Fundamentales05 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        MesSecretoService msService = new MesSecretoService();
-        
-        msService.adivinar();
+        Scanner r = new Scanner(System.in);
+
+        CuentaBancariaService cbS = new CuentaBancariaService();
+        CuentaBancaria cb = cbS.crearCuentaBancaria();
+        boolean continuar = true;
+
+        while (continuar) {
+            System.out.println(
+                    "==========================\n"
+                    + "=        Menú:           =\n"
+                    + "= 1) Ingresar monto.     =\n"
+                    + "= 2) Retirar fondos.     =\n"
+                    + "= 3) Extracción rápida.  =\n"
+                    + "= 4) Consultar datos.    =\n"
+                    + "= 5) Consultar saldo.    =\n"
+                    + "= 6) Salir.              =\n"
+                    + "= Ingrese una opción.    =\n"
+                    + "==========================\n");
+
+            switch (r.nextInt()) {
+                case 1:
+                    System.out.println("Ingrese el monto a ingresar.");
+                    cbS.ingresar(cb, r.nextDouble());
+                    break;
+                case 2:
+                    System.out.println("Ingrese el monto a retirar.");
+                    cbS.retirar(cb, r.nextDouble());
+                    break;
+                case 3:
+                    System.out.println("Tenga en cuenta que solo puede realizar este tipo de extraccion 1 vez por sesión");
+                    cbS.extraccionRapida(cb);
+                    break;
+                case 4:
+                    System.out.println("Datos de la cuenta:");
+                    cbS.consultarDatos(cb);
+                    break;
+                case 5:
+                    System.out.println("Saldo disponible:");
+                    cbS.consultarSaldo(cb);
+                    break;
+                case 6:
+                    continuar = false;
+                    System.out.println("Hasta luego!");
+                    break;
+                default:
+                    System.out.println("ERROR: opción inválida.");
+            }
+            if (continuar) {
+                System.out.println("Presione enter para continuar.");
+                r.nextLine();
+                r.nextLine();
+            }
+        }
+
     }
 
 }
